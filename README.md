@@ -1,19 +1,18 @@
-IT3385 MLOps Assignment
-Initial Environment Setup
+IT3385 MLOps Assignment initial environment setup
 
 Before starting development, all team members should set up the same Python environment and install Poetry. This helps ensure that everyone is working with a consistent development environment.
 
-1. Create the Conda Environment
+## 1. Create the Conda Environment
 
-All team members should use Python 3.11.
+All team members should use **Python 3.11**.
 
 Create a new Conda environment:
 
-conda create -n it3385-mlops python=3.11
+**conda create -n it3385-mlops python=3.11**
 
 Activate the environment:
 
-conda activate it3385-mlops
+**conda activate it3385-mlops**
 
 Verify the Python version:
 
@@ -21,11 +20,11 @@ python --version
 
 Expected output:
 
-Python 3.11.x
+**Python 3.11.x**
 
 Conda is used to provide a controlled and consistent Python version for all team members.
 
-2. Install Poetry
+## 2. Install Poetry
 
 Poetry will be used as the project's dependency manager.
 

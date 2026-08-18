@@ -1,0 +1,11 @@
+data:
+  raw_path: darren/data/raw/global_ai_jobs.csv
+  processed_path: darren/data/processed/global_ai_jobs_cleaned.csv
+
+model:
+  target: salary_usd
+  random_state: 42
+
+training:
+  test_size: 0.2
+  fold: 10

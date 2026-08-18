@@ -1,4 +1,4 @@
-# IT3385 MLOps Assignment — Initial Environment Setup
+# IT3385 MLOps Assignment - Initial Environment Setup
 
 Before starting development, all team members should set up the same Python environment and install Poetry. This helps ensure that everyone is working with a **consistent development environment**.
 

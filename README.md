@@ -260,3 +260,14 @@ Expected output:
 ```
 Environment OK
 ```
+## 9. Updating DVC-Tracked Data
+
+The original dataset in `data/raw/` should **remain unchanged**. Any cleaning or transformation should produce a new dataset inside `data/processed/`.
+
+If the processed dataset changes, re-add it to DVC:
+
+```bash
+dvc add darren/data/processed/global_ai_jobs_cleaned.csv
+```
+
+> Never edit or overwrite files in `data/raw/` directly. Always write cleaned or transformed output to `data/processed/`, then track the update with `dvc add`.

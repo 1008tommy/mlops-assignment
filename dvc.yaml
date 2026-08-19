@@ -39,8 +39,6 @@ stages:
     deps:
       - darren/models/model.pkl
       - darren/data/processed
-    outs:
-      - darren/outputs/metrics.json
     metrics:
       - darren/outputs/metrics.json
 
@@ -71,7 +69,5 @@ stages:
     deps:
       - javian/models/model.pkl
       - javian/data/processed
-    outs:
-      - javian/outputs/metrics.json
     metrics:
       - javian/outputs/metrics.json

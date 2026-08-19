@@ -1,0 +1,29 @@
+# Version control / virtualenvs
+.git
+.gitignore
+.venv
+venv
+__pycache__
+**/__pycache__
+*.pyc
+*.pyo
+
+# DVC — cache & temp are local-only; raw data is pulled from the remote at
+# runtime (dvc pull), not baked into the image.
+.dvc/cache
+.dvc/tmp
+**/*.dvc
+data/raw
+**/data/raw/*.csv
+
+# Notebooks + run artifacts
+**/*.ipynb
+.ipynb_checkpoints
+outputs/
+logs.log
+*.log
+
+# Local tooling
+.env
+.mypy_cache
+.pytest_cache

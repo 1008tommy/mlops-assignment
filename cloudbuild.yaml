@@ -1,0 +1,58 @@
+# Google Cloud Build CI/CD — build image, push to Artifact Registry, deploy to Cloud Run.
+#
+# One-time setup (run once per project):
+#   gcloud artifacts repositories create mlops-repo --repository-format=docker --location=asia-southeast1
+#   gcloud builds submit --config=cloudbuild.yaml
+#
+# To pull DVC data at deploy time (Google Drive remote), add the secret to the
+# deploy step as a --set-secrets flag, e.g.:
+#   --set-secrets=GDRIVE_CREDENTIALS_DATA=GDRIVE_CREDENTIALS:latest
+# after creating the secret:
+#   gcloud secrets create GDRIVE_CREDENTIALS --data-file=service_account.json
+
+steps:
+  # 1. Build the Docker image (tag with the git commit SHA for traceability)
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:$COMMIT_SHA'
+      - .
+
+  # 2. Push the image to Artifact Registry
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:$COMMIT_SHA'
+
+  # 3. Deploy to Cloud Run (serverless)
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - '${_SERVICE}'
+      - --image
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:$COMMIT_SHA'
+      - --region
+      - '${_REGION}'
+      - --platform
+      - managed
+      - --port
+      - '8080'
+      # Streamlit is stateful (in-memory session state). Keep a single instance
+      # so interactive state is not lost across requests.
+      - --max-instances
+      - '1'
+      - --allow-unauthenticated
+
+substitutions:
+  _SERVICE: mlops-app            # Cloud Run service name
+  _REGION: asia-southeast1       # Singapore (adjust if your data/project is elsewhere)
+  _REPO: mlops-repo              # Artifact Registry Docker repo name
+
+images:
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}:$COMMIT_SHA'
+
+options:
+  logging: CLOUD_LOGGING_ONLY

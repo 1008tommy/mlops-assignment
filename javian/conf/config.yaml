@@ -1,0 +1,11 @@
+data:
+  raw_path: javian/data/raw/_____.csv
+  processed_path: javian/data/processed/______.csv
+
+model:
+  target: 
+  random_state: 42
+
+training:
+  test_size: 0.2
+  fold: 10

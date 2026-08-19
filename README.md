@@ -260,5 +260,3 @@ Expected output:
 ```
 Environment OK
 ```
-
-Once all team members can successfully complete these steps, the shared dependency environment is ready and the team can proceed with the **project folder structure**, **Git branching**, **Hydra configuration**, and **DVC setup**.

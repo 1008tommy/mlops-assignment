@@ -1,0 +1,77 @@
+# DVC pipeline — modelling is split per team member; the web app is shared.
+#
+# Each member owns a prepare -> train -> evaluate chain under their own folder
+# (paths match each member's conf/config.yaml). The referenced scripts are
+# PLACEHOLDERS — your logic currently lives in the notebooks. Create the
+# scripts, then run:
+#     dvc repro                     # all stages
+#     dvc repro darren_train        # a single stage
+#
+# Data-tracking note (ignore for now — set up first, align later): Javian's raw
+# CSV is DVC-tracked (.dvc file) while Darren's is committed to git. Once you
+# unify this, list the .dvc file as the dep for DVC-tracked inputs.
+
+stages:
+  # ------------------ Darren: global AI jobs (target: salary_usd) -------------
+  darren_prepare:
+    cmd: python darren/src/prepare.py
+    deps:
+      - darren/data/raw
+      - darren/conf/config.yaml
+    outs:
+      - darren/data/processed
+    params:
+      - data
+
+  darren_train:
+    cmd: python darren/src/train.py
+    deps:
+      - darren/data/processed
+      - darren/conf/config.yaml
+    outs:
+      - darren/models/model.pkl
+    params:
+      - model
+      - training
+
+  darren_evaluate:
+    cmd: python darren/src/evaluate.py
+    deps:
+      - darren/models/model.pkl
+      - darren/data/processed
+    outs:
+      - darren/outputs/metrics.json
+    metrics:
+      - darren/outputs/metrics.json
+
+  # ---------------- Javian: smart manufacturing IoT (target: maintenance_required)
+  javian_prepare:
+    cmd: python javian/src/prepare.py
+    deps:
+      - javian/data/raw
+      - javian/conf/config.yaml
+    outs:
+      - javian/data/processed
+    params:
+      - data
+
+  javian_train:
+    cmd: python javian/src/train.py
+    deps:
+      - javian/data/processed
+      - javian/conf/config.yaml
+    outs:
+      - javian/models/model.pkl
+    params:
+      - model
+      - training
+
+  javian_evaluate:
+    cmd: python javian/src/evaluate.py
+    deps:
+      - javian/models/model.pkl
+      - javian/data/processed
+    outs:
+      - javian/outputs/metrics.json
+    metrics:
+      - javian/outputs/metrics.json

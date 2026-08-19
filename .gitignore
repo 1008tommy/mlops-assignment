@@ -1,0 +1,5 @@
+# Hydra generated outputs
+outputs/
+
+# Log files
+*.log

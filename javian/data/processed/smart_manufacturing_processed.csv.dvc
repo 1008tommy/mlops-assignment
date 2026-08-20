@@ -1,0 +1,5 @@
+outs:
+- md5: 7c63fbc46c835cdbb32c68922720235b
+  size: 3050402
+  hash: md5
+  path: smart_manufacturing_processed.csv

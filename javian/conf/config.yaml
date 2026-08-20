@@ -1,11 +1,27 @@
 data:
-  raw_path: javian/data/raw/_____.csv
-  processed_path: javian/data/processed/______.csv
+  raw_path: javian/data/raw/smart_manufacturing_data.csv
+  processed_path: javian/data/processed/smart_manufacturing_processed.csv
+  # Columns dropped for the classification task (leakage / identifiers).
+  drop_features:
+    - timestamp
+    - machine_id
+    - failure_type
+    - downtime_risk
+    - predicted_remaining_life
+  # Categorical columns to one-hot encode. `anomaly_flag` is already 0/1 so it
+  # is left as-is. Add `machine_status` to drop_features instead if you want to
+  # remove it entirely rather than one-hot it.
+  categorical_features:
+    - machine_status
 
 model:
-  target: 
+  target: maintenance_required
   random_state: 42
 
 training:
   test_size: 0.2
   fold: 10
+
+hydra:
+  job:
+    chdir: false

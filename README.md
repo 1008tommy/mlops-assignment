@@ -367,7 +367,7 @@ git push
 
 ### Running Without DVC Access
 
-Since the OAuth Client ID and Client Secret cannot be publicly included in this repository, users without access to the shared DVC Google Drive remote can place the required CSV files locally at the expected paths.
+Since the OAuth Client ID and Client Secret cannot be publicly included in this repository, users without access to the shared DVC Google Drive remote can place the required CSV files locally at the expected paths. (If access to the google drive is needed, request it from Darren the id, secrets and permission to the google drive)
 
 For Darren dataset:
 
@@ -384,4 +384,4 @@ data:
   processed_path: darren/data/processed/global_ai_jobs_cleaned.csv
 ```
 
-Therefore, DVC is used for dataset versioning and team data sharing, while the project can still be executed using local CSV files when access to the shared DVC remote is unavailable.
+DVC is used for dataset versioning and team data sharing, while the project can still be executed using local CSV files when access to the shared DVC remote is unavailable.

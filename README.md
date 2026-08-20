@@ -271,3 +271,117 @@ dvc add darren/data/processed/global_ai_jobs_cleaned.csv
 ```
 
 > Never edit or overwrite files in `data/raw/` directly. Always write cleaned or transformed output to `data/processed/`, then track the update with `dvc add`.
+
+## Data Version Control (DVC)
+
+This project uses **DVC (Data Version Control)** to version and share datasets without storing the actual data files directly in GitHub.
+
+A shared **Google Drive folder** is used as the DVC remote storage.
+
+### DVC Remote Configuration
+
+The shared remote is configured in `.dvc/config`:
+
+```ini
+[core]
+    remote = myremote
+
+['remote "myremote"']
+    url = gdrive://1mD6bTYB9qNbT2rWKFndiomxlZTOkmIRi
+```
+
+Google Drive authentication requires a custom OAuth Client ID and Client Secret. These credentials are configured locally using:
+
+```bash
+dvc remote modify --local myremote gdrive_client_id <CLIENT_ID>
+dvc remote modify --local myremote gdrive_client_secret <CLIENT_SECRET>
+```
+
+The Client ID and Client Secret are **not included in this repository for security reasons**.
+
+If the required OAuth credentials are unavailable, the project can still be run using the dataset stored locally at the expected file path instead of retrieving it from the DVC remote.
+
+### Pulling Data from DVC
+
+To retrieve the DVC-tracked datasets from the shared Google Drive remote:
+
+```bash
+dvc pull
+```
+
+DVC uses the corresponding `.dvc` metadata files to identify and restore the correct dataset version.
+
+For example:
+
+```text
+darren/data/raw/global_ai_jobs.csv.dvc
+        ↓
+     dvc pull
+        ↓
+darren/data/raw/global_ai_jobs.csv
+```
+
+The project then accesses the restored dataset using the paths defined in the Hydra configuration:
+
+```yaml
+data:
+  raw_path: darren/data/raw/global_ai_jobs.csv
+  processed_path: darren/data/processed/global_ai_jobs_cleaned.csv
+```
+
+### Pushing Data to DVC
+
+To upload locally tracked data to the shared Google Drive remote:
+
+```bash
+dvc push
+```
+
+### Adding or Updating DVC-Tracked Data
+
+When a new dataset or updated dataset needs to be tracked by DVC, use:
+
+```bash
+dvc add <path-to-dataset>
+```
+
+For example, to track the processed dataset:
+
+```bash
+dvc add darren/data/processed/global_ai_jobs_cleaned.csv
+```
+
+Then upload the latest version to the shared DVC remote:
+
+```bash
+dvc push
+```
+
+The generated or updated `.dvc` metadata file should then be committed to Git:
+
+```bash
+git add .
+git commit -m "Update DVC tracked data"
+git push
+```
+
+### Running Without DVC Access
+
+Since the OAuth Client ID and Client Secret cannot be publicly included in this repository, users without access to the shared DVC Google Drive remote can place the required CSV files locally at the expected paths.
+
+For Darren dataset:
+
+```text
+darren/data/raw/global_ai_jobs.csv
+darren/data/processed/global_ai_jobs_cleaned.csv
+```
+
+The Hydra configuration will then load the local files normally:
+
+```yaml
+data:
+  raw_path: darren/data/raw/global_ai_jobs.csv
+  processed_path: darren/data/processed/global_ai_jobs_cleaned.csv
+```
+
+Therefore, DVC is used for dataset versioning and team data sharing, while the project can still be executed using local CSV files when access to the shared DVC remote is unavailable.

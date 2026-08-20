@@ -1,0 +1,6 @@
+artifact_location: file:///c:/Users/darre/Documents/GitHub/mlops-assignment/darren/notebooks/mlruns/328623879732992339
+creation_time: 1787220408757
+experiment_id: '328623879732992339'
+last_update_time: 1787220408757
+lifecycle_stage: active
+name: salary_baseline_all_features

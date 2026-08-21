@@ -115,7 +115,7 @@ def make_sample_row():
 
 # HEADER
 
-st.title("AI Job Salary Predictor TEST")
+st.title("AI Job Salary Predictor")
 
 st.caption(
     "Predict annual salary for AI and data-related jobs "

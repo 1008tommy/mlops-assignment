@@ -1,0 +1,27 @@
+# VCS / CI (not needed in the image)
+.git
+.gitignore
+.github
+workflows
+
+# DVC (data is bundled from the local working tree instead)
+.dvc
+.dvcignore
+
+# Experiment / training artifacts
+mlruns
+mlartifacts
+mlruns.db
+outputs
+
+# Source files not needed at runtime
+**/notebooks/
+**/tests/
+**/__pycache__/
+**/*.pyc
+
+# Logs
+*.log
+
+# Docs
+README.md

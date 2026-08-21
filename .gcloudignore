@@ -1,0 +1,26 @@
+# Excludes files from `gcloud run deploy --source .` / `gcloud builds submit`
+# source uploads. Mirrors .dockerignore so the Cloud Build context stays lean
+# while still bundling the git-ignored model/data files from the working tree.
+
+.gcloudignore
+.git
+.gitignore
+.github
+workflows
+
+.dvc
+.dvcignore
+
+mlruns
+mlartifacts
+mlruns.db
+outputs
+
+**/notebooks/
+**/tests/
+**/__pycache__/
+**/*.pyc
+
+*.log
+
+README.md

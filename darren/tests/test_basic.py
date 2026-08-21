@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import yaml
 
 def test_config_exists():
     assert Path("darren/conf/config.yaml").exists()

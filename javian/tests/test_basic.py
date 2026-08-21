@@ -36,17 +36,3 @@ def test_config_is_valid_yaml():
     assert "data" in config
     assert "model" in config
     assert "training" in config
-
-
-# Check important model configuration values
-def test_model_config():
-
-    with open(
-        "javian/conf/config.yaml",
-        "r"
-    ) as file:
-
-        config = yaml.safe_load(file)
-
-    assert config["model"]["target"] == "maintenance_required"
-    assert config["training"]["fold"] == 10

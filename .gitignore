@@ -7,7 +7,7 @@ mlartifacts/
 mlruns.db
 
 # Model artifacts (regenerable - version via MLflow registry / DVC, not git)
-models/
+**/models/*.pkl
 *.pkl
 *.joblib
 

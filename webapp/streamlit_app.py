@@ -8,7 +8,7 @@ regressor. Run locally with:
 
 import streamlit as st
 
-st.set_page_config(page_title="IT3385 MLOps predictions", page_icon="🏭", layout="wide")
+st.set_page_config(page_title="IT3385 MLOps predictions", layout="wide")
 
 javian = st.Page(
     "views/javian_maintenance.py",
@@ -18,7 +18,7 @@ javian = st.Page(
 )
 darren = st.Page(
     "views/darren_salary.py",
-    title="Darren: Salary"
+    title="Darren: Global AI & Data Jobs Salary"
 )
 
 nav = st.navigation([javian, darren])

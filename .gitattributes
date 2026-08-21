@@ -1,0 +1,6 @@
+# Docker build is sensitive to CRLF in the Dockerfile, so pin LF for
+# all deployment files regardless of the platform's autocrlf setting.
+Dockerfile text eol=lf
+.dockerignore text eol=lf
+.gcloudignore text eol=lf
+.streamlit/config.toml text eol=lf

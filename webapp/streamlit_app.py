@@ -18,8 +18,7 @@ javian = st.Page(
 )
 darren = st.Page(
     "views/darren_salary.py",
-    title="Darren: Salary",
-    icon="💼",
+    title="Darren: Salary"
 )
 
 nav = st.navigation([javian, darren])

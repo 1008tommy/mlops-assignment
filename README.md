@@ -442,7 +442,7 @@ The web application is containerised with Docker and deployed to **Google Cloud 
 
 2. **Build and push the container image** (using Cloud Build, no local Docker needed)
 ```bash
-   gcloud builds submit --tag asia-southeast1-docker.pkg.dev/<PROJECT_ID>/<REPO_NAME>/maintenance-app
+   gcloud builds submit --tag europe-west1-docker.pkg.dev/<PROJECT_ID>/<REPO_NAME>/maintenance-app
 ```
 
 3. **Deploy to Cloud Run**
@@ -450,7 +450,7 @@ The web application is containerised with Docker and deployed to **Google Cloud 
    gcloud run deploy maintenance-app \
      --image europe-west1-docker.pkg.dev/<PROJECT_ID>/<REPO_NAME>/maintenance-app \
      --platform managed \
-     --region asia-southeast1 \
+     --region europe-west1 \
      --allow-unauthenticated \
      --port 8080
 ```

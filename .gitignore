@@ -7,3 +7,7 @@ outputs/
 # Darren Model training outputs
 darren/notebooks/mlruns
 darren/notebooks/catboost_info
+
+# MLflow local artifacts
+mlruns/
+**/mlruns/

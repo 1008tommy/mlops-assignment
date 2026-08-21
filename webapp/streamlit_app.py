@@ -1,34 +1,26 @@
-"""Shared Streamlit web app (starter).
+"""IT3385 MLOps prediction web app (router).
 
-This is a placeholder so the Docker image has something to serve. Replace the
-body with your real logic:
+Two pages: Javian's predictive maintenance classifier and Darren's salary
+regressor. Run locally with:
 
-  1. dvc pull (or load a baked-in model) to get trained artifacts
-  2. joblib.load / mlflow load the model(s)
-  3. build input widgets and call model.predict(...)
-
-Run locally:
     streamlit run webapp/streamlit_app.py
 """
 
 import streamlit as st
 
-st.set_page_config(page_title="IT3385 MLOps", layout="wide")
+st.set_page_config(page_title="IT3385 MLOps predictions", page_icon="🏭", layout="wide")
 
-st.title("IT3385 MLOps — Prediction Web App")
-
-st.info(
-    "Starter app. TODO: load your trained model/artifacts "
-    "(e.g. `dvc pull` + `joblib.load`), add input widgets, and call "
-    "`model.predict(...)`."
+javian = st.Page(
+    "views/javian_maintenance.py",
+    title="Javian: Maintenance",
+    icon="🏭",
+    default=True,
+)
+darren = st.Page(
+    "views/darren_salary.py",
+    title="Darren: Salary",
+    icon="💼",
 )
 
-with st.form("predict_form"):
-    val = st.number_input("Enter a feature value", value=0.0)
-    submitted = st.form_submit_button("Predict")
-
-    if submitted:
-        # Replace with a real model call, e.g.:
-        #   pred = model.predict([[val]])
-        #   st.success(f"Prediction: {pred[0]}")
-        st.write("Prediction: (TODO — replace with your model call)")
+nav = st.navigation([javian, darren])
+nav.run()

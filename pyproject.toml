@@ -41,5 +41,6 @@ build-backend = "poetry.core.masonry.api"
 [dependency-groups]
 dev = [
     "ipykernel (>=7.3.0,<8.0.0)",
-    "jupyterlab"
+    "jupyterlab",
+    "pytest (>=9.1.1,<10.0.0)"
 ]

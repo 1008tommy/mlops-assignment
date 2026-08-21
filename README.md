@@ -385,5 +385,3 @@ data:
 ```
 
 DVC is used for dataset versioning and team data sharing, while the project can still be executed using local CSV files when access to the shared DVC remote is unavailable.
-
-Test

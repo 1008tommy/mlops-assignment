@@ -425,7 +425,20 @@ darren/data/raw/global_ai_jobs.csv
 
 ## 11. Deployment (Google Cloud Run)
 
-The web application is containerised with Docker and deployed to **Google Cloud Run**, a fully managed serverless platform that runs containers and auto-scales based on traffic (including scaling to zero when idle).
+The web application is containerised with Docker and deployed to *Google Cloud Run*, a fully managed serverless platform that runs containers and auto-scales based on traffic (including scaling to zero when idle).
+
+### Prerequisites
+- Google Cloud SDK (gcloud) installed and authenticated
+- A GCP project with billing enabled
+- Cloud Run API and Artifact Registry API enabled
+
+### Steps to manually deploy using google console 
+
+1. Go to Cloud Run on GCP:
+2. Click on Connect Repository and then Cloud Build with Continuously deploy from a repository (source or function) selected.
+3. Configure the Service Name and select the region (in this case we chose europe-west1)
+4. Select Request-based under Billing and Allow public access for Authentication.
+5. Click on Create.
 
 ### Steps to manually rebuild the container and redeploy the app
 When updating the deployed application:

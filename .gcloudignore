@@ -8,8 +8,7 @@
 .github
 workflows
 
-.dvc
-.dvcignore
+# DVC config/pointers are kept — the build runs `dvc pull` for the data.
 
 mlruns
 mlartifacts

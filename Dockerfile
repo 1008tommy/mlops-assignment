@@ -31,6 +31,12 @@ RUN poetry install --only main --no-root
 # ---------------------------------------------------------------------------
 FROM python:3.11-slim AS runtime
 
+# libgomp (GNU OpenMP) is required by lightgbm/xgboost at import time
+# (loading the PyCaret model pulls in lightgbm) but is not in the slim image.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1

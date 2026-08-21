@@ -4,7 +4,9 @@
 .github
 workflows
 
-# DVC config/pointers are kept — the build runs `dvc pull` for the data.
+# DVC (data is bundled from the local working tree instead)
+.dvc
+.dvcignore
 
 # Experiment / training artifacts
 mlruns

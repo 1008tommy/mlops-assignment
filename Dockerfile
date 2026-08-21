@@ -3,45 +3,28 @@
 # IT3385 MLOps web app — container image for GCP Cloud Run.
 #
 # Multi-stage build:
-#   Stage 1 (builder)  — install dependencies with Poetry, then `dvc pull` the
-#                        DVC-tracked data (raw CSVs) from the gdrive remote
-#   Stage 2 (runtime)  — slim Python image + venv + web app + models + data
+#   Stage 1 (builder)  — install project dependencies with Poetry into a venv
+#   Stage 2 (runtime)  — slim Python image + the venv + the web app + models/data
 #
-# DVC credentials are injected at build time via the GDRIVE_CREDENTIALS_DATA
-# build arg (from a Secret Manager secret in Cloud Build). When the arg is
-# empty the pull is skipped, so local builds against the working tree work
-# without credentials.
+# Build context is the repo working tree, so the model .pkl files and raw data
+# CSVs are bundled into the image even though they are git-ignored / DVC-tracked.
+# Run `dvc pull` locally first so all data files exist before building.
 
 # ---------------------------------------------------------------------------
-# Stage 1: dependencies + data
+# Stage 1: dependencies
 # ---------------------------------------------------------------------------
 FROM python:3.11-slim AS builder
 
 ENV POETRY_VERSION=2.4.1 \
     POETRY_HOME=/opt/poetry \
     POETRY_VIRTUALENVS_IN_PROJECT=true \
-    POETRY_NO_INTERACTION=1 \
-    PATH="/app/.venv/bin:$PATH"
+    POETRY_NO_INTERACTION=1
 
 RUN pip install --no-cache-dir "poetry==${POETRY_VERSION}"
 
 WORKDIR /app
 COPY pyproject.toml poetry.lock ./
 RUN poetry install --only main --no-root
-
-# Web app source, models, and DVC config/pointers (all tracked in git)
-COPY webapp/ webapp/
-COPY javian/ javian/
-COPY darren/ darren/
-COPY .dvc/ .dvc/
-COPY .dvcignore ./
-
-# Pull the DVC-tracked data (raw CSVs) from the gdrive remote.
-# Skipped when GDRIVE_CREDENTIALS_DATA is empty (e.g. local builds).
-ARG GDRIVE_CREDENTIALS_DATA
-RUN if [ -n "$GDRIVE_CREDENTIALS_DATA" ]; then \
-      GDRIVE_CREDENTIALS_DATA="$GDRIVE_CREDENTIALS_DATA" dvc pull; \
-    fi
 
 # ---------------------------------------------------------------------------
 # Stage 2: runtime
@@ -60,12 +43,13 @@ ENV PATH="/app/.venv/bin:$PATH" \
 
 WORKDIR /app
 
-# Everything for runtime comes from the builder, so the dvc-pulled data is
-# included. .streamlit/ is copied from the build context.
+# Poetry-managed virtualenv with all runtime dependencies
 COPY --from=builder /app/.venv /app/.venv
-COPY --from=builder /app/webapp /app/webapp
-COPY --from=builder /app/javian /app/javian
-COPY --from=builder /app/darren /app/darren
+
+# Web app, models, and data (the views read these paths at runtime)
+COPY webapp/ webapp/
+COPY javian/ javian/
+COPY darren/ darren/
 COPY .streamlit/ .streamlit/
 
 EXPOSE 8080

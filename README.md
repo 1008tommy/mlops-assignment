@@ -427,33 +427,21 @@ darren/data/raw/global_ai_jobs.csv
 
 The web application is containerised with Docker and deployed to **Google Cloud Run**, a fully managed serverless platform that runs containers and auto-scales based on traffic (including scaling to zero when idle).
 
-### Prerequisites
-- Google Cloud SDK (`gcloud`) installed and authenticated
-- A GCP project with billing enabled
-- Cloud Run API and Artifact Registry API enabled
+### Steps to manually rebuild the container and redeploy the app
+When updating the deployed application:
 
-### Steps to deploy
+1. Open a terminal in the project root folder.
+2. Authenticate with Google Cloud if required:
 
-1. **Authenticate and set the project**
-```bash
-   gcloud auth login
-   gcloud config set project <PROJECT_ID>
-```
+  gcloud auth login
 
-2. **Build and push the container image** (using Cloud Build, no local Docker needed)
-```bash
-   gcloud builds submit --tag europe-west1-docker.pkg.dev/<PROJECT_ID>/<REPO_NAME>/maintenance-app
-```
+3. Set the correct Google Cloud project:
 
-3. **Deploy to Cloud Run**
-```bash
-   gcloud run deploy maintenance-app \
-     --image europe-west1-docker.pkg.dev/<PROJECT_ID>/<REPO_NAME>/maintenance-app \
-     --platform managed \
-     --region europe-west1 \
-     --allow-unauthenticated \
-     --port 8080
-```
+  gcloud config set project <project_id>
 
-4. **Access the deployed app**
-   Cloud Run returns a public HTTPS URL on successful deployment, e.g.: https://mlops-assignment-987605116952.europe-west1.run.app
+4. Deploy the updated local source code:
+
+  gcloud run deploy <service_name> --source . --region <region>
+
+
+**Note on containerization:** Step 4 handles this automatically via `--source .`. Cloud Build uploads your source, then either builds from a `Dockerfile` (if present in the project root) or falls back to Google Cloud Buildpacks to auto-detect and containerize your app. The resulting image is pushed to Artifact Registry and deployed as a new Cloud Run revision — no manual `docker build`/`docker push` needed.

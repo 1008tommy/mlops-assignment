@@ -17,10 +17,30 @@ data:
 model:
   target: maintenance_required
   random_state: 42
+  sort_metric: F1 
+  n_select: 3
+  experiment_name: smart_manufacturing_experiment
 
 training:
   test_size: 0.2
   fold: 10
+  fold_strategy: kfold
+  train_size: 0.8
+  # Worker count for model fitting. Deliberately NOT -1: joblib's physical-core
+  # detection fails on this machine, so -1 spawned 14 loky workers, each holding
+  # a copy of the SMOTE-balanced training set plus a deep forest (~362 MB for a
+  # default Extra Trees). That exhausted RAM and killed the kernel mid-tuning.
+  n_jobs: 4
+  # Optuna search budget. The search uses fewer folds than compare_models: the
+  # 10-fold figure above still governs model ranking and reported CV metrics.
+  tune_fold: 5
+  tune_n_iter: 20
+
+preprocess: 
+  fix_imbalance: true
+  normalize: true
+  transformation: true
+  feature_selection: false
 
 hydra:
   job:

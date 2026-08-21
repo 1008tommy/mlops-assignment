@@ -1,5 +1,15 @@
 # Hydra generated outputs
 outputs/
 
+# MLflow
+mlruns/
+mlartifacts/
+mlruns.db
+
+# Model artifacts (regenerable - version via MLflow registry / DVC, not git)
+models/
+*.pkl
+*.joblib
+
 # Log files
 *.log

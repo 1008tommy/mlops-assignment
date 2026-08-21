@@ -1051,6 +1051,24 @@ files = [
 markers = {dev = "sys_platform == \"win32\""}
 
 [[package]]
+name = "colorlog"
+version = "6.12.0"
+description = "Add colours to the output of Python's logging module."
+optional = false
+python-versions = ">=3.6"
+groups = ["main"]
+files = [
+    {file = "colorlog-6.12.0-py3-none-any.whl", hash = "sha256:30d392604e9110045a2c2aeefc27d7a017abbab63f3a8aee594eac0801df784e"},
+    {file = "colorlog-6.12.0.tar.gz", hash = "sha256:2a7924c1dadf18b22a0eb8b06d1c7b01d5341707ec1641eb6fcc4fde0c3e8e5f"},
+]
+
+[package.dependencies]
+colorama = {version = "*", markers = "sys_platform == \"win32\""}
+
+[package.extras]
+development = ["black", "flake8", "mypy", "pytest", "types-colorama"]
+
+[[package]]
 name = "comm"
 version = "0.2.3"
 description = "Jupyter Python Comm implementation, for usage in ipykernel, xeus-python etc."
@@ -4343,6 +4361,19 @@ files = [
 ]
 
 [[package]]
+name = "nvidia-nccl-cu12"
+version = "2.31.2"
+description = "NVIDIA Collective Communication Library (NCCL) Runtime"
+optional = false
+python-versions = ">=3"
+groups = ["main"]
+markers = "platform_system == \"Linux\""
+files = [
+    {file = "nvidia_nccl_cu12-2.31.2-py3-none-manylinux_2_18_aarch64.whl", hash = "sha256:f208de397e431631eab0eca946444404a495d43a007535baa333d7de9e510ca2"},
+    {file = "nvidia_nccl_cu12-2.31.2-py3-none-manylinux_2_18_x86_64.whl", hash = "sha256:f9b1dc3c2a7e20176054144ebb3b32fea83b40402ee5d7ac7045cd11ecc956c0"},
+]
+
+[[package]]
 name = "oauth2client"
 version = "4.1.3"
 description = "OAuth 2.0 client library"
@@ -4427,6 +4458,80 @@ files = [
 [package.dependencies]
 opentelemetry-api = "1.44.0"
 typing-extensions = ">=4.5.0"
+
+[[package]]
+name = "optuna"
+version = "4.9.0"
+description = "A hyperparameter optimization framework"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "optuna-4.9.0-py3-none-any.whl", hash = "sha256:f52f3be6148654850c92a5860d398fd88ec6b2c84ab68d9c3d07dcff02e7afee"},
+    {file = "optuna-4.9.0.tar.gz", hash = "sha256:b322e5cbdf1655fb84c37646c4a7a1f391de1b47806bbe222e015825d0a82b87"},
+]
+
+[package.dependencies]
+alembic = ">=1.5.0"
+colorlog = "*"
+numpy = "*"
+packaging = ">=20.0"
+PyYAML = "*"
+sqlalchemy = ">=1.4.2"
+tqdm = "*"
+
+[package.extras]
+document = ["ase", "cmaes (>=0.12.0)", "fvcore", "kaleido (!=0.2.1.post1,<0.4)", "lightgbm", "matplotlib (!=3.6.0)", "pandas", "pillow", "plotly (>=4.9.0)", "scikit-learn", "sphinx", "sphinx-copybutton", "sphinx-gallery", "sphinx-notfound-page", "sphinx_rtd_theme (>=1.2.0)", "torch", "torchvision"]
+optional = ["boto3", "cmaes (>=0.12.0)", "google-cloud-storage", "greenlet", "grpcio", "matplotlib (!=3.6.0)", "pandas", "plotly (>=4.9.0)", "protobuf (>=5.28.1)", "redis", "scikit-learn (>=0.24.2)", "scipy", "torch"]
+
+[[package]]
+name = "optuna-integration"
+version = "4.9.0"
+description = "Integration libraries of Optuna."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "optuna_integration-4.9.0-py3-none-any.whl", hash = "sha256:578dccd6657c12e0457750512ce718d4e3dab8730fa36dcd0b502eacfaa1e795"},
+    {file = "optuna_integration-4.9.0.tar.gz", hash = "sha256:c650615ea52259f518fee245be4f63be55c7495ffc7361d05e5054496ec427b8"},
+]
+
+[package.dependencies]
+optuna = "*"
+pandas = {version = "*", optional = true, markers = "extra == \"sklearn\""}
+scikit-learn = {version = "*", optional = true, markers = "extra == \"sklearn\""}
+scipy = {version = "*", optional = true, markers = "extra == \"sklearn\""}
+
+[package.extras]
+allennlp = ["allennlp", "jsonnet", "numpy (<2.0.0)", "psutil"]
+botorch = ["botorch (<0.10.0)"]
+catboost = ["catboost", "numpy (<2.0.0)"]
+chainer = ["chainer", "numpy (<2.0.0)"]
+chainermn = ["chainermn", "numpy (<2.0.0)"]
+checking = ["black (<25.9.0)", "blackdoc (<0.4.2)", "hacking", "isort", "mypy", "types-PyYAML", "types-redis", "types-setuptools", "typing_extensions (>=3.10.0.0)"]
+cma = ["cma", "numpy (<2.0.0)"]
+comet = ["comet_ml (>=3.39.3)"]
+dask = ["distributed"]
+document = ["mlflow", "pandas", "scikit-learn (>=0.24.2)", "scipy (>=1.9.2) ; python_version >= \"3.9\"", "sphinx", "sphinx-notfound-page", "sphinx_rtd_theme"]
+fastai = ["fastai (>=2.0.0)"]
+fastaiv2 = ["fastai (>=2.0.0)", "fastcore (<1.12.2)"]
+keras = ["tensorflow"]
+lightgbm = ["lightgbm", "scikit-learn"]
+mlflow = ["mlflow"]
+mxnet = ["mxnet"]
+pytorch-distributed = ["gpytorch", "gpytorch"]
+pytorch-ignite = ["pytorch-ignite", "pytorch-ignite"]
+pytorch-lightning = ["lightning", "lightning"]
+shap = ["numpy (<2.0.0)", "shap"]
+sklearn = ["pandas", "scikit-learn", "scipy"]
+skorch = ["skorch"]
+tensorboard = ["tensorboard", "tensorflow"]
+tensorflow = ["tensorflow (<=2.15.0)"]
+test = ["coverage", "fakeredis[lua]", "grpcio", "protobuf (>=5.28.1)", "pytest"]
+tfkeras = ["tensorflow"]
+trackio = ["trackio"]
+wandb = ["wandb"]
+xgboost = ["xgboost"]
 
 [[package]]
 name = "orjson"
@@ -7763,6 +7868,34 @@ files = [
 ]
 
 [[package]]
+name = "xgboost"
+version = "3.2.0"
+description = "XGBoost Python Package"
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "xgboost-3.2.0-py3-none-macosx_10_15_x86_64.whl", hash = "sha256:2f661966d3e322536d9c448090a870fcba1e32ee5760c10b7c46bac7a342079a"},
+    {file = "xgboost-3.2.0-py3-none-macosx_12_0_arm64.whl", hash = "sha256:eabbd40d474b8dbf6cb3536325f9150b9e6f0db32d18de9914fb3227d0bef5b7"},
+    {file = "xgboost-3.2.0-py3-none-manylinux_2_28_aarch64.whl", hash = "sha256:852eabc6d3b3702a59bf78dbfdcd1cb9c4d3a3b6e5ed1f8781d8b9512354fdd2"},
+    {file = "xgboost-3.2.0-py3-none-manylinux_2_28_x86_64.whl", hash = "sha256:99b4a6bbcb47212fec5cf5fbe12347215f073c08967431b0122cfbd1ee70312c"},
+    {file = "xgboost-3.2.0-py3-none-win_amd64.whl", hash = "sha256:0d169736fd836fc13646c7ab787167b3a8110351c2c6bc770c755ee1618f0442"},
+    {file = "xgboost-3.2.0.tar.gz", hash = "sha256:99b0e9a2a64896cdaf509c5e46372d336c692406646d20f2af505003c0c5d70d"},
+]
+
+[package.dependencies]
+numpy = "*"
+nvidia-nccl-cu12 = {version = "*", markers = "platform_system == \"Linux\""}
+scipy = "*"
+
+[package.extras]
+dask = ["dask", "distributed", "pandas"]
+pandas = ["pandas (>=1.2)"]
+plotting = ["graphviz", "matplotlib"]
+pyspark = ["cloudpickle", "pyspark (>=3.4)", "scikit-learn"]
+scikit-learn = ["scikit-learn"]
+
+[[package]]
 name = "xxhash"
 version = "4.0.1"
 description = "Python binding for xxHash"
@@ -8165,4 +8298,4 @@ type = ["pytest-mypy (>=1.0.1) ; platform_python_implementation != \"PyPy\""]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<3.12"
-content-hash = "8f89c1f6df12d3499f1f49ab9a0314509571979a14579cfb4b1044779cdea219"
+content-hash = "eb5ac7470678d9a7ef344446ef64c14e0c519b4dff0c1bf173a9f30ccd15315d"

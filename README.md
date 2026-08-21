@@ -422,3 +422,38 @@ darren/data/raw/global_ai_jobs.csv
 
 - **Maintenance page** — CSV with columns `timestamp`, `machine_id`, `temperature`, `vibration`, `humidity`, `pressure`, `energy_consumption`. Rows are grouped per machine and ordered by time; each machine needs at least two rows so the lag features can be built.
 - **Salary page** — CSV with the model's 31 feature columns (the raw `global_ai_jobs.csv` or a subset works). Categorical values must use the same labels as the training data.
+
+## 11. Deployment (Google Cloud Run)
+
+The web application is containerised with Docker and deployed to **Google Cloud Run**, a fully managed serverless platform that runs containers and auto-scales based on traffic (including scaling to zero when idle).
+
+### Prerequisites
+- Google Cloud SDK (`gcloud`) installed and authenticated
+- A GCP project with billing enabled
+- Cloud Run API and Artifact Registry API enabled
+
+### Steps to deploy
+
+1. **Authenticate and set the project**
+```bash
+   gcloud auth login
+   gcloud config set project <PROJECT_ID>
+```
+
+2. **Build and push the container image** (using Cloud Build, no local Docker needed)
+```bash
+   gcloud builds submit --tag asia-southeast1-docker.pkg.dev/<PROJECT_ID>/<REPO_NAME>/maintenance-app
+```
+
+3. **Deploy to Cloud Run**
+```bash
+   gcloud run deploy maintenance-app \
+     --image europe-west1-docker.pkg.dev/<PROJECT_ID>/<REPO_NAME>/maintenance-app \
+     --platform managed \
+     --region asia-southeast1 \
+     --allow-unauthenticated \
+     --port 8080
+```
+
+4. **Access the deployed app**
+   Cloud Run returns a public HTTPS URL on successful deployment, e.g.: https://mlops-assignment-987605116952.europe-west1.run.app

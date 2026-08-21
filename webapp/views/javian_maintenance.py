@@ -13,7 +13,6 @@ import pandas as pd
 import streamlit as st
 
 ROOT = Path(__file__).resolve().parents[2]
-RAW_CSV = ROOT / "javian" / "data" / "raw" / "smart_manufacturing_data.csv"
 MODEL_PKL = ROOT / "javian" / "models" / "final_XGBClassifier.pkl"
 
 SENSORS = ["temperature", "vibration", "humidity", "pressure", "energy_consumption"]
@@ -29,6 +28,39 @@ FEATURES = [
     "temperature_delta", "vibration_delta", "temp_x_vib",
 ]
 
+# Median feature values from the training data, used as the initial values for
+# the manual single-prediction form.
+DEFAULTS = {
+    "temperature": 75.06,
+    "vibration": 49.96,
+    "humidity": 54.98,
+    "pressure": 3.01,
+    "energy_consumption": 2.74,
+    "temperature_lag1": 75.06,
+    "vibration_lag1": 49.96,
+    "humidity_lag1": 54.98,
+    "pressure_lag1": 3.01,
+    "energy_consumption_lag1": 2.74,
+    "temperature_roll_mean": 75.02,
+    "temperature_roll_std": 9.16,
+    "vibration_roll_mean": 50.0,
+    "vibration_roll_std": 13.7,
+    "energy_consumption_roll_mean": 2.75,
+    "energy_consumption_roll_std": 1.27,
+    "temperature_delta": -0.03,
+    "vibration_delta": 0.01,
+    "temp_x_vib": 3686.38,
+}
+
+
+def _step(feature):
+    """Sensible +/- step for a number input given the feature's scale."""
+    if feature.endswith("_delta"):
+        return 0.01
+    if feature == "temp_x_vib":
+        return 1.0
+    return 0.1
+
 
 @st.cache_resource
 def load_maintenance_model():
@@ -38,10 +70,9 @@ def load_maintenance_model():
 @st.cache_data
 def clip_bounds():
     """1st/99th percentile clip limits, fixed to the full training data."""
-    raw = pd.read_csv(RAW_CSV)
     return {
-        col: tuple(raw[col].quantile([0.01, 0.99]).tolist())
-        for col in ["vibration", "temperature"]
+        "vibration": (15.11, 84.97),
+        "temperature": (51.65, 98.23),
     }
 
 
@@ -78,11 +109,6 @@ def engineer_features(df):
     return df.dropna(subset=FEATURES).reset_index(drop=True)
 
 
-@st.cache_data
-def training_data():
-    return engineer_features(pd.read_csv(RAW_CSV))
-
-
 model = load_maintenance_model()
 
 st.title("Predictive maintenance")
@@ -91,19 +117,53 @@ st.caption("Javian's model: xgboost classifier on smart manufacturing sensor dat
 tab_single, tab_batch = st.tabs(["Single prediction", "Batch prediction"])
 
 with tab_single:
-    st.markdown("Pick a machine and predict whether it needs maintenance from its latest sensor reading.")
-    data = training_data()
-    machines = sorted(data["machine_id"].unique())
-    machine = st.selectbox("Machine", machines, format_func=lambda m: f"Machine {m}")
-    row = data[data["machine_id"] == machine].sort_values("timestamp").iloc[-1]
+    st.markdown(
+        "Enter the model's 19 input features to predict whether maintenance is "
+        "needed: the five sensor readings plus the temporal features derived "
+        "from machine history (lag-1, rolling statistics, deltas, and the "
+        "temperature × vibration interaction). No dataset is loaded, so this "
+        "page works without the raw CSV."
+    )
 
-    st.caption(f"Latest reading timestamp: {row['timestamp']}")
+    inputs = {}
+
+    st.subheader("Sensor readings")
     cols = st.columns(5)
-    for c, s in zip(cols, SENSORS):
-        c.metric(s, f"{row[s]:.2f}")
+    for col, s in zip(cols, SENSORS):
+        inputs[s] = col.number_input(
+            s.replace("_", " ").title(), value=float(DEFAULTS[s]), step=_step(s)
+        )
+
+    st.subheader("Lag-1 (previous reading)")
+    cols = st.columns(5)
+    for col, s in zip(cols, SENSORS):
+        f = f"{s}_lag1"
+        inputs[f] = col.number_input(
+            f.replace("_", " ").title(), value=float(DEFAULTS[f]), step=_step(f)
+        )
+
+    st.subheader("Rolling statistics (5-step window)")
+    rolling = [
+        "temperature_roll_mean", "temperature_roll_std",
+        "vibration_roll_mean", "vibration_roll_std",
+        "energy_consumption_roll_mean", "energy_consumption_roll_std",
+    ]
+    cols = st.columns(6)
+    for col, f in zip(cols, rolling):
+        inputs[f] = col.number_input(
+            f.replace("_", " ").title(), value=float(DEFAULTS[f]), step=_step(f)
+        )
+
+    st.subheader("Deltas and interaction")
+    extras = ["temperature_delta", "vibration_delta", "temp_x_vib"]
+    cols = st.columns(3)
+    for col, f in zip(cols, extras):
+        inputs[f] = col.number_input(
+            f.replace("_", " ").title(), value=float(DEFAULTS[f]), step=_step(f)
+        )
 
     if st.button("Predict maintenance", type="primary"):
-        X = row[FEATURES].to_frame().T
+        X = pd.DataFrame([inputs])[FEATURES]
         risk = float(model.predict_proba(X)[0, 1])
         if risk >= 0.5:
             st.error(f"Maintenance required (risk {risk:.1%})")
@@ -117,12 +177,6 @@ with tab_batch:
         "machine and ordered by time, and each machine needs at least two "
         "rows so the lag features exist."
     )
-    with st.expander("Download a sample input file"):
-        sample = pd.read_csv(RAW_CSV)[REQUIRED].head(200)
-        buf = BytesIO()
-        sample.to_csv(buf, index=False)
-        st.download_button("Download sample CSV", buf.getvalue(), "sample_input.csv", "text/csv")
-
     uploaded = st.file_uploader("Upload CSV", type="csv")
     if uploaded is not None:
         df = pd.read_csv(uploaded)

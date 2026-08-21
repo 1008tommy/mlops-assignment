@@ -390,7 +390,8 @@ DVC is used for dataset versioning and team data sharing, while the project can 
 
 ## Running the Web App
 
-The repository includes a **Streamlit** web app with two prediction pages — Javian's predictive maintenance classifier and Darren's salary regressor. The app loads the trained models and datasets directly from disk, so run it after `dvc pull` (or after placing the files locally, see [DVC](#data-version-control-dvc)).
+The repository includes a **Streamlit** web app with two prediction pages, Javian's predictive maintenance classifier and Darren's salary regressor. The app loads the trained models and datasets directly from disk, so run it after `dvc pull` 
+(or after placing the files locally, see [DVC](#data-version-control-dvc)).
 
 Start the app from the project root:
 
@@ -411,17 +412,13 @@ The app reads these paths at runtime:
 
 ```text
 javian/models/final_XGBClassifier.pkl
-javian/data/raw/smart_manufacturing_data.csv
 darren/models/final_salary_catboost_pipeline.pkl
-darren/data/raw/global_ai_jobs.csv
 ```
-
-> The models are loaded with `joblib`. The raw CSVs are used for the sample input files (and, for the maintenance page, the feature-clipping bounds), so they must be present even if you only run single prediction.
 
 ### Batch input format
 
-- **Maintenance page** — CSV with columns `timestamp`, `machine_id`, `temperature`, `vibration`, `humidity`, `pressure`, `energy_consumption`. Rows are grouped per machine and ordered by time; each machine needs at least two rows so the lag features can be built.
-- **Salary page** — CSV with the model's 31 feature columns (the raw `global_ai_jobs.csv` or a subset works). Categorical values must use the same labels as the training data.
+- **Maintenance page**: CSV with columns `timestamp`, `machine_id`, `temperature`, `vibration`, `humidity`, `pressure`, `energy_consumption`. Rows are grouped per machine and ordered by time; each machine needs at least two rows so the lag features can be built.
+- **Salary page**: CSV with the model's 31 feature columns (the raw `global_ai_jobs.csv` or a subset works). Categorical values must use the same labels as the training data.
 
 ## 11. Deployment (Google Cloud Run)
 
@@ -457,4 +454,7 @@ When updating the deployed application:
   gcloud run deploy <service_name> --source . --region <region>
 
 
-**Note on containerization:** Step 4 handles this automatically via `--source .`. Cloud Build uploads your source, then either builds from a `Dockerfile` (if present in the project root) or falls back to Google Cloud Buildpacks to auto-detect and containerize your app. The resulting image is pushed to Artifact Registry and deployed as a new Cloud Run revision — no manual `docker build`/`docker push` needed.
+**Note on containerization:** Step 4 handles this automatically via `--source .`. Cloud Build uploads your source, then either builds from a `Dockerfile` (if present in the project root) or falls back to Google Cloud Buildpacks to auto-detect and containerize your app. The resulting image is pushed to Artifact Registry and deployed as a new Cloud Run revision meaning that no manual `docker build`/`docker push` needed.
+
+
+

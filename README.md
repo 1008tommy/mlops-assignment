@@ -191,8 +191,6 @@ poetry install
 
 The versions stored in `poetry.lock` are used to provide a consistent environment across team members and CI.
 
-```
-
 ### Managing Dependencies
 
 Add a normal dependency:

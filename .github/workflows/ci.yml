@@ -1,4 +1,4 @@
-name: Simple CI
+name: CI/CD Pipeline
 
 on:
   push:
@@ -7,7 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  continuous-integration:
+    name: Continuous Integration
     runs-on: ubuntu-latest
 
     steps:
@@ -27,3 +28,36 @@ jobs:
 
       - name: Run tests
         run: poetry run pytest
+
+  continuous-delivery:
+    name: Continuous Delivery
+    needs: continuous-integration
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Verify web application
+        run: python -m py_compile webapp/app.py
+
+      - name: Create deployment package
+        run: |
+          mkdir deployment
+          cp -r webapp deployment/
+          cp -r darren deployment/
+          cp -r javian deployment/
+          cp pyproject.toml deployment/
+          cp poetry.lock deployment/
+
+      - name: Upload deployment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlops-application-${{ github.sha }}
+          path: deployment/

@@ -457,4 +457,3 @@ When updating the deployed application:
 **Note on containerization:** Step 4 handles this automatically via `--source .`. Cloud Build uploads your source, then either builds from a `Dockerfile` (if present in the project root) or falls back to Google Cloud Buildpacks to auto-detect and containerize your app. The resulting image is pushed to Artifact Registry and deployed as a new Cloud Run revision meaning that no manual `docker build`/`docker push` needed.
 
 
-

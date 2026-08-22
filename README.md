@@ -19,7 +19,7 @@ The project uses **Poetry, Hydra, DVC, Git/GitHub, pytest, GitHub Actions, Docke
 | Javian Ng | Smart Manufacturing dataset - predictive maintenance (https://www.kaggle.com/datasets/ziya07/smart-manufacturing-iot-cloud-monitoring-dataset) | XGBoost Classifier |
 
 ## 2. Project Structure
-
+```text
 mlops-assignment/
 │
 ├── .dvc/
@@ -88,6 +88,7 @@ mlops-assignment/
 ├── pyproject.toml
 ├── README.md
 └── README_oldVerison.md
+```
 
 ### Main Folders and Files
 

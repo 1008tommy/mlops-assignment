@@ -87,7 +87,7 @@ mlops-assignment/
 ├── poetry.lock
 ├── pyproject.toml
 ├── README.md
-└── README_oldVerison.md
+
 ```
 
 ### Main Folders and Files

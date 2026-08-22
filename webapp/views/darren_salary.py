@@ -90,7 +90,7 @@ DEFAULTS = {
 }
 
 
-# Numeric input rules
+# Numeric input rules, so instead of just only loading from the data using its min and max, this set a more reasonable range for the user to input.
 # Format: minimum, maximum, default, step
 
 NUMERIC = {
@@ -155,103 +155,49 @@ def display_name(name):
 
 
 # Validate input data
-# Whole-number checking is only used for manual single prediction
-
 def validate_inputs(df, check_integer=False):
-
     df = df.copy()
     errors = []
 
-    # Check missing values
-    if df.isna().any().any():
-
-        missing = df.columns[
-            df.isna().any()
-        ].tolist()
-
-        errors.append(
-            "Missing values found in: "
-            + ", ".join(missing)
-        )
-
-        return df, errors
-
-
     # Check categorical values
     for feature, allowed in OPTIONS.items():
-
-        invalid = df.loc[
-            ~df[feature].isin(allowed),
-            feature
-        ].unique()
+        invalid = df.loc[~df[feature].isin(allowed), feature].unique()
 
         if len(invalid) > 0:
-
             errors.append(
                 f"{display_name(feature)} has invalid value(s): "
                 + ", ".join(map(str, invalid))
             )
 
-
-    # Check numeric values and ranges
+    # Check numeric values
     for feature, settings in NUMERIC.items():
-
         minimum, maximum, _, step = settings
+        converted = pd.to_numeric(df[feature], errors="coerce")
 
-        converted = pd.to_numeric(
-            df[feature],
-            errors="coerce"
-        )
-
-        # Reject non-numeric values
         if converted.isna().any():
-
             errors.append(
                 f"{display_name(feature)} must be a valid number."
             )
-
             continue
 
-
-        # Only check whole numbers for manual single prediction
-        if (
-            check_integer
-            and step == 1
-            and (converted % 1 != 0).any()
-        ):
-
+        if check_integer and step == 1 and (converted % 1 != 0).any():
             errors.append(
                 f"{display_name(feature)} must be a whole number."
             )
-
             continue
 
-
-        # Reject values outside the accepted range
-        outside = ~converted.between(
-            minimum,
-            maximum
-        )
+        outside = ~converted.between(minimum, maximum)
 
         if outside.any():
-
-            bad_values = (
-                converted[outside]
-                .unique()
-                .tolist()
-            )
-
+            bad_values = converted[outside].unique().tolist()
             errors.append(
                 f"{display_name(feature)} must be between "
                 f"{minimum} and {maximum}. "
                 f"Invalid value(s): {bad_values}"
             )
-
             continue
 
-
         df[feature] = converted
-
 
     return df, errors
 

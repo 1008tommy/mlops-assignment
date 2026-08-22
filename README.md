@@ -92,19 +92,20 @@ mlops-assignment/
 
 ### Main Folders and Files
 
-- `darren/` - Darren dataset, configuration, notebooks, trained model and tests.
-- `javian/` - Javian dataset, configuration, notebooks, trained model and tests.
-- `conf/` - Hydra configuration files for dataset paths and modelling settings.
-- `data/raw/` - original datasets tracked using DVC.
-- `data/processed/` - processed datasets tracked using DVC.
-- `models/` - final trained machine learning pipelines used by the web application.
-- `notebooks/` - EDA, model experimentation, tuning and evaluation notebooks.
-- `tests/` - automated pytest tests used by the CI pipeline.
-- `webapp/` - integrated Streamlit web application.
-- `.github/workflows/` - GitHub Actions CI/CD workflow.
-- `Dockerfile` - container configuration used for deployment.
-- `pyproject.toml` - project dependencies managed using Poetry.
-- `poetry.lock` - locked dependency versions for reproducibility.
+- `darren/` - Darren's individual project folder: his dataset, Hydra configuration, EDA/modelling notebooks, source code, trained model pipeline and pytest tests for the AI job salary prediction task.
+- `javian/` - Javian's individual project folder: his dataset, Hydra configuration, EDA/modelling notebooks, source code, trained model pipeline and pytest tests for the predictive maintenance task.
+- `conf/` - Hydra configuration files defining dataset paths, target variables, and training settings, so these values don't need to be hard-coded into the notebooks or source code.
+- `data/raw/` - The original, unmodified datasets, version-controlled with DVC rather than committed directly to Git.
+- `data/processed/` - Cleaned and feature-engineered datasets produced during EDA, also version-controlled with DVC.
+- `models/` - The final trained and tuned machine learning pipelines that the Streamlit web application loads to make predictions.
+- `notebooks/` - EDA, model experimentation, hyperparameter tuning and evaluation notebooks for each member's task.
+- `tests/` - Automated pytest tests that validate configuration, data and model artifacts as part of the GitHub Actions CI pipeline.
+- `webapp/` - The integrated Streamlit web application shared by both models, including each member's prediction page.
+- `.github/workflows/` - The GitHub Actions workflow definitions that run the Continuous Integration and Continuous Delivery pipeline.
+- `.streamlit/` - Streamlit runtime configuration for deployment, setting the server to listen on the port Cloud Run expects.
+- `Dockerfile` - Container build instructions used to package the Streamlit application for deployment to Google Cloud Run.
+- `pyproject.toml` - Project dependencies and metadata managed using Poetry.
+- `poetry.lock` - Locked, exact dependency versions ensuring a reproducible environment across team members and CI.
 
 ---
 

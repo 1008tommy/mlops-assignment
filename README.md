@@ -13,6 +13,8 @@ The project uses **Poetry, Hydra, DVC, Git/GitHub, pytest, GitHub Actions, Docke
 
 ## 1. Team Information
 
+Team Number: 1
+
 | Team Member | Dataset / Work Undertaken | Final Model |
 |---|---|---|
 | Darren Chor | Global AI & Data Jobs dataset - annual salary prediction (https://www.kaggle.com/datasets/mohankrishnathalla/global-ai-and-data-jobs-salary-dataset)| CatBoost Regressor |

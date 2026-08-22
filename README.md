@@ -20,45 +20,74 @@ The project uses **Poetry, Hydra, DVC, Git/GitHub, pytest, GitHub Actions, Docke
 
 ## 2. Project Structure
 
-```text
 mlops-assignment/
+│
+├── .dvc/
+│   ├── config
+│   └── .gitignore
 │
 ├── .github/
 │   └── workflows/
 │       └── ci.yml
 │
+├── .streamlit/
+│   └── config.toml
+│
 ├── darren/
 │   ├── conf/
+│   │   └── config.yaml
 │   ├── data/
 │   │   ├── raw/
+│   │   │   └── global_ai_jobs.csv.dvc
 │   │   └── processed/
+│   │       └── global_ai_jobs_preprocessed.csv.dvc
 │   ├── models/
+│   │   └── final_salary_catboost_pipeline.pkl
 │   ├── notebooks/
+│   │   ├── eda.ipynb
+│   │   └── modelling.ipynb
 │   ├── src/
+│   │   └── main.py
 │   └── tests/
+│       └── darren_test.py
 │
 ├── javian/
 │   ├── conf/
+│   │   └── config.yaml
 │   ├── data/
 │   │   ├── raw/
+│   │   │   └── smart_manufacturing_data.csv.dvc
 │   │   └── processed/
+│   │       └── smart_manufacturing_processed.csv.dvc
 │   ├── models/
+│   │   └── final_XGBClassifier.pkl
 │   ├── notebooks/
+│   │   ├── eda.ipynb
+│   │   └── modelling.ipynb
 │   ├── src/
+│   │   └── main.py
 │   └── tests/
+│       └── javian_test.py
 │
 ├── webapp/
-│   └── streamlit_app.py
+│   ├── streamlit_app.py
+│   └── views/
+│       ├── darren_salary.py
+│       └── javian_maintenance.py
+│
+├── workflows/
+│   └── ci.yaml
 │
 ├── .dockerignore
 ├── .dvcignore
 ├── .gcloudignore
+├── .gitattributes
 ├── .gitignore
 ├── Dockerfile
-├── pyproject.toml
 ├── poetry.lock
-└── README.md
-```
+├── pyproject.toml
+├── README.md
+└── README_oldVerison.md
 
 ### Main Folders and Files
 

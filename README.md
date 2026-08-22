@@ -77,8 +77,6 @@ mlops-assignment/
 │       ├── darren_salary.py
 │       └── javian_maintenance.py
 │
-├── workflows/
-│   └── ci.yaml
 │
 ├── .dockerignore
 ├── .dvcignore
@@ -257,29 +255,28 @@ This makes configurations easier to maintain and modify without changing the mai
 
 ## 6. Data Version Control with DVC
 
-DVC is used to version datasets without storing large CSV files directly in Git.
+DVC is used to version and share datasets without storing large CSV files directly in GitHub.
 
 The project contains DVC metadata files such as:
 
 ```text
 darren/data/raw/global_ai_jobs.csv.dvc
 darren/data/processed/global_ai_jobs_preprocessed.csv.dvc
-
 javian/data/raw/smart_manufacturing_data.csv.dvc
 javian/data/processed/smart_manufacturing_processed.csv.dvc
 ```
 
-A shared Google Drive folder is used as the DVC remote.
+A shared Google Drive folder is used as the DVC remote storage.
 
 ### Pull DVC-Tracked Data
 
-After cloning the repository:
+After cloning the repository, retrieve the datasets using:
 
 ```bash
 dvc pull
 ```
 
-DVC reads the `.dvc` metadata and restores the appropriate dataset versions.
+DVC reads the `.dvc` metadata files and restores the corresponding dataset versions.
 
 Example:
 
@@ -293,23 +290,23 @@ global_ai_jobs.csv
 
 ### Add or Update Data
 
-The original files inside `data/raw/` should remain unchanged.
+The original datasets inside `data/raw/` should remain unchanged.
 
-Processed data should be written to `data/processed/`.
+Processed datasets should be written to `data/processed/`.
 
-To track a new or modified dataset:
+To track a new or updated dataset:
 
 ```bash
 dvc add <path-to-dataset>
 ```
 
-Then upload it to the shared remote:
+Upload the tracked data to the shared DVC remote:
 
 ```bash
 dvc push
 ```
 
-Commit the updated DVC metadata:
+Commit the updated DVC metadata to Git:
 
 ```bash
 git add .
@@ -317,15 +314,9 @@ git commit -m "Update DVC tracked data"
 git push
 ```
 
-### Data Version Control (DVC)
-
-This project uses **DVC (Data Version Control)** to version and share datasets without storing the actual data files directly in GitHub.
-
-A shared **Google Drive folder** is used as the DVC remote storage.
-
 ### DVC Remote Configuration
 
-The shared remote is configured in `.dvc/config`:
+The shared Google Drive remote is configured in `.dvc/config`:
 
 ```ini
 [core]
@@ -335,16 +326,16 @@ The shared remote is configured in `.dvc/config`:
     url = gdrive://1mD6bTYB9qNbT2rWKFndiomxlZTOkmIRi
 ```
 
-Google Drive authentication requires a custom OAuth Client ID and Client Secret. These credentials are configured locally using:
+Google Drive authentication requires an OAuth Client ID and Client Secret. These credentials are configured locally using:
 
 ```bash
 dvc remote modify --local myremote gdrive_client_id <CLIENT_ID>
 dvc remote modify --local myremote gdrive_client_secret <CLIENT_SECRET>
 ```
 
-The Client ID and Client Secret are **not included in this repository for security reasons**.
+The OAuth credentials are not stored in the repository for security reasons.
 
-ince the OAuth Client ID and Client Secret cannot be publicly included in this repository, users without access to the shared DVC Google Drive remote can place the required CSV files locally at the expected paths. (If access to the google drive is needed, request it from Darren the id, secrets and permission to the google drive)
+Users who require access to the shared DVC remote should request access from the project team (Darren). If remote access is unavailable, the required datasets can be placed manually at their expected local project paths.
 
 ---
 
@@ -413,7 +404,7 @@ The workflow:
 
 This ensures that a successfully tested version is prepared and ready for release.
 
-The final production release remains manually controlled so that the team decides when a tested application version is deployed to Google Cloud Run. Automation of deployment was considered but wasn't implemented due to our app running on Google Cloud, so to prevent unnessacry charges everything we made edits to the streamlit app, we do it manually.
+The final production release remains manually controlled so that the team decides when a tested application version is deployed to Google Cloud Run. This approach follows Continuous Delivery, where the application is automatically tested and prepared for release while production deployment requires a manual action.
 
 The workflow therefore follows:
 
@@ -500,15 +491,15 @@ The required model files must be available before starting the application.
 
 ---
 
-## 13. User Guide
+## 11. User Guide
 
-### 13.1 Accessing the Application
+### 11.1 Accessing the Application
 
 The deployed application can be accessed here https://mlops-assignment-987605116952.europe-west1.run.app/
 
 ---
 
-### 13.2 AI Job Salary - Single Prediction
+### 11.2 AI Job Salary - Single Prediction
 
 1. Open the **AI Job Salary Prediction** page.
 2. Select the required categorical job information.
@@ -529,7 +520,7 @@ Invalid values are rejected and an appropriate validation message is displayed.
 
 ---
 
-### 13.3 AI Job Salary - Batch Prediction
+### 11.3 AI Job Salary - Batch Prediction
 
 1. Open the **Batch Prediction** tab.
 2. Download the provided sample CSV if required.
@@ -547,7 +538,7 @@ The complete saved pipeline automatically handles the preprocessing required by 
 
 ---
 
-### 13.4 Predictive Maintenance - Single Prediction
+### 11.4 Predictive Maintenance - Single Prediction
 
 1. Open the **Predictive Maintenance** page.
 2. Enter or select the required machine information.
@@ -557,7 +548,7 @@ The complete saved pipeline automatically handles the preprocessing required by 
 
 ---
 
-### 13.5 Predictive Maintenance - Batch Prediction
+### 11.5 Predictive Maintenance - Batch Prediction
 
 1. Open the batch prediction section.
 2. Download the sample CSV if required.
@@ -582,13 +573,13 @@ Rows are grouped by machine and ordered by time so that the required historical 
 
 ---
 
-## 14. Deployment to Google Cloud Run
+## 12. Deployment to Google Cloud Run
 
 The integrated Streamlit application is containerised using Docker and deployed to **Google Cloud Run**.
 
 Google Cloud Run provides a managed container environment with automatic scaling based on application traffic.
 
-### 14.1 Initial Deployment
+### 12.1 Initial Deployment
 
 The Cloud Run service was initially created through the Google Cloud Console.
 
@@ -605,7 +596,7 @@ The repository contains a `Dockerfile`, which Cloud Build uses to build the appl
 
 The resulting container image is stored in Google Artifact Registry and deployed as a Cloud Run revision.
 
-### 14.2 Redeploying an Updated Application
+### 12.2 Redeploying an Updated Application
 
 After the Cloud Run service has been created, updated versions of the application can be manually released from the project root.
 
@@ -624,7 +615,7 @@ gcloud config set project <project_id>
 Redeploy the updated application:
 
 ```bash
-gcloud run deploy <service_name> --source . --region
+gcloud run deploy <service_name> --source . --region <region>
 ```
 
 The `--source .` command sends the current project source to Google Cloud Build.
@@ -651,7 +642,7 @@ New Cloud Run Revision
 Updated Streamlit Application
 ```
 
-## 15. Monitoring
+## 13. Monitoring
 
 Google Cloud Run Observability is used to monitor the operational health of the deployed application.
 
@@ -673,7 +664,7 @@ Model-specific monitoring such as feature drift, prediction drift or production 
 
 ---
 
-## 16. URLs
+## 14. URLs
 
 ### Deployed Web Application
 

@@ -45,7 +45,7 @@ jobs:
           python-version: "3.11"
 
       - name: Verify web application
-        run: python -m py_compile webapp/app.py
+        run: python -m py_compile webapp/streamlit_app.py
 
       - name: Create deployment package
         run: |
